@@ -1,4 +1,5 @@
 import json
+import models
 from datetime import datetime
 from uuid import uuid4
 """
@@ -85,3 +86,4 @@ class BaseModel():
             none
         """
         self.updated_at = datetime.now()
+        models.storage.save()
