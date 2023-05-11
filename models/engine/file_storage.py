@@ -27,7 +27,7 @@ class FileStorage:
             based in the id of its class
             models(dict) -> Inventory of all models
     """
-    __file_name = 'storage.json'
+    __file_name = 'file.json'
     __instances: dict = {}
     models: dict = {
         'BaseModel': BaseModel,
