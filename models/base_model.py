@@ -33,7 +33,7 @@ BaseModel:
 
 class BaseModel():
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, **kwargs) -> None:
         """
         Creates an instance
 
@@ -52,10 +52,12 @@ class BaseModel():
                     self.updated_at = datetime.fromisoformat(val)
                 else:
                     setattr(self, key, val)
+
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self) -> str:
         """String Representation of an instance"""
@@ -73,6 +75,8 @@ class BaseModel():
         """
         attrs = vars(self).copy()
         attrs['__class__'] = type(self).__name__
+        attrs['created_at'] = self.created_at.isoformat()
+        attrs['updated_at'] = self.updated_at.isoformat()
         return (attrs)
 
     def save(self):
