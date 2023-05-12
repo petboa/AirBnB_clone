@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 import cmd
+from models import storage
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place_amenity import PlaceAmenity
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 """
 Hbnb Console
 ==================
@@ -37,7 +46,80 @@ Class:
 
 
 class HbnbConsole(cmd.Cmd):
+    # intro = ""
     prompt = '(hbnb) '
+
+    def do_create(self, line):
+        """Creates an instance"""
+        if len(line) == 0:
+            print('** class name missing **')
+        elif line not in storage.models.keys():
+            print("** class doesn't exist **")
+        else:
+            new_obj = storage.models[line]()
+            new_obj.save()
+            print(new_obj.id)
+
+    def do_all(self, line):
+        """Displays all saved instances"""
+        instances = storage.all()
+        for _, value in instances.items():
+            if len(line) == 0:
+                print(value)
+            elif value.__class__.__name__ == line:
+                print(value)
+        if line not in storage.models.keys():
+            print("** class doesn't exist **")
+
+    def do_show(self, line):
+        """Shows a single instance"""
+        words = line.split()
+        if len(words) == 2:
+            found = False
+            obj, obj_id = words
+            if obj not in storage.models.keys():
+                print("** class doesn't exist **")
+            else:
+                for value in storage.all().values():
+                    if value.id == obj_id and value.__class__.__name__ == obj:
+                        print(value)
+                        found = True
+            if not found:
+                print('** no instance found **')
+
+        elif len(words) == 1 and words[0] not in storage.models.keys():
+            print("** class doesn't exist **")
+        elif len(words) == 1:
+            print('instance id missing')
+        else:
+            print('** class name missing **')
+
+    def do_update(self, obj):
+        """Updates an instance"""
+        pass
+
+    def emptyline(self):
+        """No command"""
+        pass
+
+    def do_destroy(self, line):
+        """Deletes an instance"""
+        words = line.split()
+        if len(words) == 2:
+            obj, obj_id = words
+            if obj not in storage.models.keys():
+                print(" class doesn't exist")
+            else:
+                try:
+                    del storage.all()[f'{obj}.{obj_id}']
+                    storage.save()
+                except KeyError:
+                    print('** no instance found **')
+
+        elif len(words) == 1:
+            print('instance id missing')
+        else:
+            print('** class name missing **')
 
     def do_quit(self, arg):
         """
