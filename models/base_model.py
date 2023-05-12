@@ -14,17 +14,6 @@ Example Usage:
 Class:
 ---
 
-BaseModel:
-    The parent class from which all the other models inherit
-
-    Attributes:
-        id (str): ID of the object
-        created_at (str): When the object was created
-        updated_at (str): When the object was last updated
-
-    Methods:
-        to_json(): Converts a BaseModel instance into a dictionary
-        save(): Saves a BaseModel object to a JSON file
 """
 
 
@@ -32,6 +21,18 @@ BaseModel:
 
 
 class BaseModel():
+
+    """BaseModel:
+        The parent class from which all the other models inherit
+
+        Attributes:
+            id (str): ID of the object
+            created_at (str): When the object was created
+            updated_at (str): When the object was last updated
+
+        Methods:
+            to_json(): Converts a BaseModel instance into a dictionary
+            save(): Saves a BaseModel object to a JSON file"""
 
     def __init__(self, **kwargs) -> None:
         """
@@ -61,7 +62,7 @@ class BaseModel():
 
     def __str__(self) -> str:
         """String Representation of an instance"""
-        return (f"[{type(self)}] ({self.id}) {self.__dict__}")
+        return (f"[{type(self).__name__}] ({self.id}) {self.__dict__}")
 
     def __repr__(self) -> str:
         """Returns String Representation of an instance"""
