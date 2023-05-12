@@ -21,7 +21,8 @@ Example Usage:
 Class:
 -----
 
-- HbnbConsole: The class of the interpretor. It inherits the cmd.Cmd class
+- HbnbConsole: The class of the interpretor.
+    It inherits the cmd.Cmd class
 
     Attributes:
         prompt (str) : Prompt
@@ -81,26 +82,51 @@ class HbnbConsole(cmd.Cmd):
                 print("** class doesn't exist **")
             else:
                 for value in storage.all().values():
-                    if value.id == obj_id and value.__class__.__name__ == obj:
+                    if value.id == obj_id and\
+                            value.__class__.__name__ == obj:
                         print(value)
                         found = True
             if not found:
                 print('** no instance found **')
 
-        elif len(words) == 1 and words[0] not in storage.models.keys():
+        elif len(words) == 1 and words[0]\
+                not in storage.models.keys():
             print("** class doesn't exist **")
         elif len(words) == 1:
             print('instance id missing')
         else:
             print('** class name missing **')
 
-    def do_update(self, obj):
+    def do_update(self, line):
         """Updates an instance"""
-        pass
+        words = line.split()
+        if len(words) == 4:
+            found = False
+            obj, obj_id, attribute, new_value = words
+            if obj not in storage.models.keys():
+                print("** class doesn't exist **")
+            else:
+                for value in storage.all().values():
+                    if value.id == obj_id and\
+                            value.__class__.__name__ == obj:
+                        key = obj + '.' + obj_id
+                        setattr(storage.all()[key], attribute, new_value)
+                        found = True
+            if not found:
+                print('** no instance found **')
 
-    def emptyline(self):
-        """No command"""
-        pass
+        elif len(words) == 1 and words[0] \
+                not in storage.models.keys():
+            print("** class doesn't exist **")
+        elif len(words) == 1:
+            print('instance id missing')
+        elif len(words) == 2:
+            print('** attribute name missing **')
+        elif len(words) == 3:
+            print('** value missing **')
+        else:
+            print('** class name missing **')
+        storage.save()
 
     def do_destroy(self, line):
         """Deletes an instance"""
@@ -120,6 +146,10 @@ class HbnbConsole(cmd.Cmd):
             print('instance id missing')
         else:
             print('** class name missing **')
+
+    def emptyline(self):
+        """No command"""
+        pass
 
     def do_quit(self, arg):
         """
