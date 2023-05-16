@@ -22,6 +22,13 @@ Example Usage:
 Class:
 -----
 
+"""
+
+# Beginning of code starts here
+
+
+class HBNBCommand(cmd.Cmd):
+    """
 - HBNBCommand: The class of the interpretor.
     It inherits the cmd.Cmd class
 
@@ -42,12 +49,7 @@ Class:
 
     - help_EOF(self):
          Shows how to use the 'EOF' command
-"""
-
-# Beginning of code starts here
-
-
-class HBNBCommand(cmd.Cmd):
+    """
     # intro = ""
     prompt = '(hbnb) '
 
