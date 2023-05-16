@@ -1,15 +1,4 @@
 #!/usr/bin/env python3
-import cmd
-import sys
-from models import storage
-from models.base_model import BaseModel
-from models.amenity import Amenity
-from models.city import City
-from models.place_amenity import PlaceAmenity
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
 """
 Hbnb Console
 ==================
@@ -23,6 +12,17 @@ Class:
 -----
 
 """
+import cmd
+import sys
+from models import storage
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place_amenity import PlaceAmenity
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 
 # Beginning of code starts here
 
@@ -50,7 +50,7 @@ class HBNBCommand(cmd.Cmd):
     - help_EOF(self):
          Shows how to use the 'EOF' command
     """
-    # intro = ""
+
     prompt = '(hbnb) '
 
     def do_create(self, line):
