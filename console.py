@@ -58,7 +58,8 @@ class HBNBCommand(cmd.Cmd):
             obj, command = line.split(".")
 
             verb, attrs = command.split('(')
-            attrs = attrs.replace(')', '')
+            attrs = attrs.replace(')', '').replace('"', '')\
+                .replace('\'', '')
             line = f'{verb} {obj} {attrs}'
         return line
 
