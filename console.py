@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import cmd
+import sys
 from models import storage
 from models.base_model import BaseModel
 from models.amenity import Amenity
@@ -168,7 +169,7 @@ class HbnbConsole(cmd.Cmd):
          HelloShell: quit
          Quitting HelloShell...
         """
-        return True
+        sys.exit(0)
 
     def do_EOF(self, arg):
         """
@@ -187,7 +188,7 @@ class HbnbConsole(cmd.Cmd):
          HelloShell: EOF
          Quitting HelloShell...
         """
-        return True
+        sys.exit(0)
 
 # Doc Functions
 
