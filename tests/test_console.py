@@ -8,7 +8,7 @@ import sys
 import unittest
 from unittest.mock import create_autospec, patch
 from io import StringIO
-from console import HbnbConsole
+from console import HBNBCommand
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
@@ -46,7 +46,7 @@ class TestConsole(unittest.TestCase):
         """
         Redirects stdin and stdout to the mock module
         """
-        return HbnbConsole(stdin=self.mock_stdin, stdout=self.mock_stdout)
+        return HBNBCommand(stdin=self.mock_stdin, stdout=self.mock_stdout)
 
     def last_write(self, nr=None):
         """Returns last n output lines"""
@@ -58,7 +58,7 @@ class TestConsole(unittest.TestCase):
     def test_quit(self):
         """Quit command"""
         cli = self.create()
-        self.assertRaises(SystemExit, HbnbConsole.do_quit, self, "BaseModel")
+        self.assertRaises(SystemExit, HBNBCommand.do_quit, self, "BaseModel")
 
 
 if __name__ == "__main__":

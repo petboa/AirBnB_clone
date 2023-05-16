@@ -22,7 +22,7 @@ Example Usage:
 Class:
 -----
 
-- HbnbConsole: The class of the interpretor.
+- HBNBCommand: The class of the interpretor.
     It inherits the cmd.Cmd class
 
     Attributes:
@@ -47,7 +47,7 @@ Class:
 # Beginning of code starts here
 
 
-class HbnbConsole(cmd.Cmd):
+class HBNBCommand(cmd.Cmd):
     # intro = ""
     prompt = '(hbnb) '
 
@@ -236,4 +236,4 @@ class HbnbConsole(cmd.Cmd):
 
 
 if __name__ == '__main__':
-    HbnbConsole().cmdloop()
+    HBNBCommand().cmdloop()
