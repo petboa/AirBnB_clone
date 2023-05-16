@@ -53,6 +53,15 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
 
+    def precmd(self, line: str):
+        if '.' in line:
+            obj, command = line.split(".")
+
+            verb, attrs = command.split('(')
+            attrs = attrs.replace(')', '')
+            line = f'{verb} {obj} {attrs}'
+        return line
+
     def do_create(self, line):
         """Creates an instance"""
         if len(line) == 0:
@@ -75,8 +84,23 @@ class HBNBCommand(cmd.Cmd):
         if line not in storage.models.keys():
             print("** class doesn't exist **")
 
+    def do_count(self, line):
+        """Counts the number of a specific model saved"""
+        instances = storage.all()
+        if len(line) == 0:
+            print(len(instances))
+        if line not in storage.models.keys():
+            print("** class doesn't exist **")
+        else:
+            counter = 0
+            for _, value in instances.items():
+                if value.__class__.__name__ == line:
+                    counter += 1
+            print(counter)
+
     def do_show(self, line):
         """Shows a single instance"""
+        print(line)
         words = line.split()
         if len(words) == 2:
             found = False
