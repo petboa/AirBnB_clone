@@ -1,41 +1,34 @@
+#!/usr/bin/python3
+
+"""Places model, inheritting from the BaseModel"""
+
 from models.base_model import BaseModel
 
 
-class NewPlace(BaseModel):
-    """NewPlace class for representing a location"""
+class Place(BaseModel):
+    """
+    Place class
+    Attributes:
+        city_id (str) -> City.id
+        user_id (str) -> City.id
+        name (str) -> name of place
+        description (str) -> description of place
+        number_rooms (int) -> Number of rooms: default is 0
+        number_bathrooms (int) -> Number of bathrooms: default is 0
+        max_guest (int) -> Maximum number of guests: default is 0
+        price_by_night (int) -> charing rate by night: default is 0
+        latitude (float) -> Geographical lattitude
+        longitude (float) -> Geographical longitude
+        amenity_ids (list) -> list of strings of ameninty ID's
+    """
     city_id = ""
     user_id = ""
     name = ""
     description = ""
-    number_of_rooms = 0
-    number_of_bathrooms = 0
-    maximum_guests = 0
-    price_per_night = 0
+    number_rooms = 0
+    number_bathrooms = 0
+    max_guest = 0
+    price_by_night = 0
     latitude = 0.0
     longitude = 0.0
     amenity_ids = []
-
-    def __init__(self, *args, **kwargs):
-        """Initialize NewPlace object"""
-        super().__init__(self, *args, **kwargs)
-
-    def __str__(self):
-        """Returns string representation of the object"""
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id,
-                                     self.__dict__)
-
-    def save(self):
-        """Updates the public instance attribute updated_at"""
-        super().save(self)
-
-    def to_dict(self):
-        """Returns a dictionary containing all keys and values"""
-        return super().to_dict(self)
-
-    def delete(self):
-        """Deletes the current instance from the storage"""
-        super().delete(self)
-
-
-if __name__ == "__main__":
-    pass
