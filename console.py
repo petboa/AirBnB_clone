@@ -12,142 +12,256 @@ Class:
 -----
 
 """
-
 import cmd
+import sys
+from models import storage
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
 from models.amenity import Amenity
+from models.city import City
+from models.place_amenity import PlaceAmenity
 from models.place import Place
-from models.reviews import Review
+from models.review import Review
+from models.state import State
+from models.user import User
+
+# Beginning of code starts here
 
 
 class HBNBCommand(cmd.Cmd):
-    intro = 'Welcome to the AirBnB console. Type help or ? to list commands.\n'
-    prompt = '(malik)'
-    file = None
+    """
+- HBNBCommand: The class of the interpretor.
+    It inherits the cmd.Cmd class
 
-    def do_create(self, arg):
-        """Creates a new instance of BaseModel,
-        saves it (to the JSON file) and prints the id."""
-        if arg == '':
-            print('** class name missing **')
-        elif arg != 'BaseModel':
-            print('** class doesn\'t exist **')
-        else:
-            args = arg.split("")
-            obj = eval(args[0])()
-            obj.save()
-            print(obj.id)
+    Attributes:
+        prompt (str) : Prompt
+        last_output (str) : Previous Output
 
-    def do_show(self, arg):
-        """Prints the string representation of an
-        instance based on the class name and id"""
-        if arg == '':
-            print('** class name missing **')
-        elif arg != 'BaseModel':
-            print('** class doesn\'t exist **')
-        elif arg.find(' ') == -1:
-            print('** instance id missing **')
-        elif arg.id != 'BaseModel':
-            print('** no instance found **')
-        else:
-            obj = BaseModel()
-            obj.__str__()
-            print(obj)
+    Methods:
 
-    def do_eof(self, arg):
-        'Exit the console'
-        print('Thank you for using AirBnB')
-        return -1
+    - do_quit(self, arg):
+         Quit the program
 
-    def do_all(self, arg):
-        """Prints all string representation of all
-        instances based or not on the class name"""
-        if arg == '':
-            print('** class name missing **')
-        elif arg != 'BaseModel':
-            print('** class doesn\'t exist **')
-        else:
-            obj = BaseModel()
-            obj.__str__()
-            for i in obj:
-                print(i)
+    - do_EOF(self, arg):
+         Quit the program
 
-    def do_destroy(self, arg):
-        """Deletes an instance based on the class name
-        and id (save the change into the JSON file)."""
-        if arg == '':
-            print('** class name missing **')
-        elif arg != 'BaseModel':
-            print('** class doesn\'t exist **')
-        elif arg.find(' ') == -1:
-            print('** instance id missing **')
-        elif arg.id != 'BaseModel':
-            print('** no instance found **')
-        else:
-            obj = BaseModel()
-            obj.delete()
+    - help_quit(self):
+         Shows how to use the 'quit' command
 
-    def do_update(self, arg):
-        """Updates an instance based on the class name and
-        id by adding or updating attribute"""
+    - help_EOF(self):
+         Shows how to use the 'EOF' command
+    """
 
-        if arg == '':
-            print('** class name missing **')
-        elif arg != 'BaseModel':
-            print('** class doesn\'t exist **')
-        elif arg.find(' ') == -1:
-            print('** instance id missing **')
-        elif arg.id != 'BaseModel':
-            print('** no instance found **')
-        elif arg.find(' ') == -1:
-            print('** attribute name missing **')
-        elif arg.find(' ') == -1:
-            print('** value missing **')
-        else:
-            arg = arg.split()
-            arg[1] = arg[1].replace('"', '')
-            arg[2] = arg[2].replace('"', '')
-            obj = BaseModel()
-            obj.__dict__[arg[1]] = arg[2]
-            obj.save()
-            obj.__str__()
-            print(obj)
+    prompt = '(hbnb) '
 
-    def do_quit(self, arg):
-        'Prints a farewell message and exits the console'
-        print('Thank you for using AirBnB')
-        return -1
+    def precmd(self, line: str):
+        if '.' in line:
+            obj, command = line.split(".")
 
-    def precmd(self, line):
-        line = line.lower()
-        if self.file and 'playback' not in line:
-            print(line, file=self.file)
+            verb, attrs = command.split('(')
+            attrs = attrs.replace(')', '').replace('"', '')\
+                .replace('\'', '')
+            line = f'{verb} {obj} {attrs}'
         return line
 
-    def close(self):
-        if self.file:
-            self.file.close()
-            self.file = None
+    def do_create(self, line):
+        """Creates an instance"""
+        if len(line) == 0:
+            print('** class name missing **')
+        elif line not in storage.models.keys():
+            print("** class doesn't exist **")
+        else:
+            new_obj = storage.models[line]()
+            new_obj.save()
+            print(new_obj.id)
+
+    def do_all(self, line):
+        """Displays all saved instances"""
+        instances = storage.all()
+        for _, value in instances.items():
+            if len(line) == 0:
+                print(value)
+            elif value.__class__.__name__ == line:
+                print(value)
+        if line not in storage.models.keys():
+            print("** class doesn't exist **")
+
+    def do_count(self, line):
+        """Counts the number of a specific model saved"""
+        instances = storage.all()
+        if len(line) == 0:
+            print(len(instances))
+        if line not in storage.models.keys():
+            print("** class doesn't exist **")
+        else:
+            counter = 0
+            for _, value in instances.items():
+                if value.__class__.__name__ == line:
+                    counter += 1
+            print(counter)
+
+    def do_show(self, line):
+        """Shows a single instance"""
+        print(line)
+        words = line.split()
+        if len(words) == 2:
+            found = False
+            obj, obj_id = words
+            if obj not in storage.models.keys():
+                print("** class doesn't exist **")
+            else:
+                for value in storage.all().values():
+                    if value.id == obj_id and\
+                            value.__class__.__name__ == obj:
+                        print(value)
+                        found = True
+            if not found:
+                print('** no instance found **')
+
+        elif len(words) == 1 and words[0]\
+                not in storage.models.keys():
+            print("** class doesn't exist **")
+        elif len(words) == 1:
+            print('instance id missing')
+        else:
+            print('** class name missing **')
+
+    def do_update(self, line):
+        """Updates an instance"""
+        words = line.split()
+        if len(words) == 4:
+            found = False
+            obj, obj_id, attribute, new_value = words
+            if obj not in storage.models.keys():
+                print("** class doesn't exist **")
+            else:
+                for value in storage.all().values():
+                    if value.id == obj_id and\
+                            value.__class__.__name__ == obj:
+                        key = obj + '.' + obj_id
+                        setattr(storage.all()[key], attribute, new_value)
+                        found = True
+            if not found:
+                print('** no instance found **')
+
+        elif len(words) == 1 and words[0] \
+                not in storage.models.keys():
+            print("** class doesn't exist **")
+        elif len(words) == 1:
+            print('instance id missing')
+        elif len(words) == 2:
+            print('** attribute name missing **')
+        elif len(words) == 3:
+            print('** value missing **')
+        else:
+            print('** class name missing **')
+        storage.save()
+
+    def do_destroy(self, line):
+        """Deletes an instance"""
+        words = line.split()
+        if len(words) == 2:
+            obj, obj_id = words
+            if obj not in storage.models.keys():
+                print(" class doesn't exist")
+            else:
+                try:
+                    del storage.all()[f'{obj}.{obj_id}']
+                    storage.save()
+                except KeyError:
+                    print('** no instance found **')
+
+        elif len(words) == 1:
+            print('instance id missing')
+        else:
+            print('** class name missing **')
 
     def emptyline(self):
+        """No command"""
         pass
 
-    def do_help(self, arg):
-        'List available commands with "help" or detailed help with "help cmd".'
-        cmd.Cmd.do_help(self, arg)
+    def do_quit(self, arg):
+        """
+        Quits Hello Shell
 
-    def default(self, line):
-        'Called on an input line when the command prefix is not recognized.'
-        print('*** Unknown syntax: {}'.format(line))
+        Args:
+            None
 
+        Returns:
+            True
 
-def parse(arg):
-    'Convert a series of zero or more numbers to an argument tuple'
-    return tuple(map(int, arg.split()))
+        Usage:
+        ./console.py
+         Welcome to HelloShell CLI
+         ===========================
+         HelloShell: quit
+         Quitting HelloShell...
+        """
+        sys.exit(0)
+
+    def do_EOF(self, arg):
+        """
+        Quits Hello Shell
+
+        Args:
+            None
+
+        Returns:
+            True
+
+        Usage:
+        ./console.py
+         Welcome to HelloShell CLI
+         ===========================
+         HelloShell: EOF
+         Quitting HelloShell...
+        """
+        sys.exit(0)
+
+# Doc Functions
+
+    def help_quit(self):
+        """
+        Shows how to use the 'quit' command
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Usage:
+            ./console.py
+            Welcome to HelloShell CLI
+            ===========================
+            HelloShell: help quit
+            type quit
+            Quits Hello Shell
+            HelloShell:
+        """
+        print("type quit\nQuits Hello Shell")
+
+    def help_EOF(self):
+        """
+        Shows how to use the 'EOF' command
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Usage:
+            ./console.py
+            Welcome to HelloShell CLI
+            ===========================
+            HelloShell: help EOF
+            type quit
+            Quits Hello Shell
+            HelloShell:
+        """
+        print("EOF or 'CTRL + D'\nQuits Hello Shell")
 
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
+    
