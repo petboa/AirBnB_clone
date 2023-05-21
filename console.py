@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-"""Module for the entry point."""
+"""
+HBnB console: A command-line interface for HolbertonBnB.
+"""
 
 import cmd
 import re
@@ -14,9 +16,20 @@ from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
 
-def parse(arg):
+
+def parse_arguments(arg):
+    """
+    Parse the command arguments.
+
+    Args:
+        arg (str): The command argument string.
+
+    Returns:
+        list: A list of parsed arguments.
+    """
     curly_braces = re.search(r"\{(.*?)\}", arg)
     brackets = re.search(r"\[(.*?)\]", arg)
+    
     if curly_braces is None:
         if brackets is None:
             return [i.strip(",") for i in split(arg)]
@@ -31,13 +44,13 @@ def parse(arg):
         retl.append(curly_braces.group())
         return retl
 
+
 class HBNBCommand(cmd.Cmd):
-    """Defines the HolbertonBnB command interpreter.
-    Attributes:
-        prompt (str): The command prompt.
+    """
+    HolbertonBnB command interpreter.
     """
     prompt = "(hbnb) "
-    __classes = {
+    valid_classes = {
         "BaseModel",
         "User",
         "State",
@@ -48,12 +61,16 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def emptyline(self):
-        """Do nothing upon receiving an empty line."""
+        """
+        Do nothing upon receiving an empty line.
+        """
         pass
 
     def default(self, arg):
-        """Default behavior for cmd module when input is invalid"""
-        argdict = {
+        """
+        Default behavior for cmd module when input is invalid.
+        """
+        command_dict = {
             "all": self.do_all,
             "show": self.do_show,
             "destroy": self.do_destroy,
@@ -61,46 +78,50 @@ class HBNBCommand(cmd.Cmd):
             "update": self.do_update
         }
         match = re.search(r"\.", arg)
+        
         if match is not None:
-            argl = [arg[:match.span()[0]], arg[match.span()[1]:]]
-            match = re.search(r"\((.*?)\)", argl[1])
+            arg_list = [arg[:match.span()[0]], arg[match.span()[1]:]]
+            match = re.search(r"\((.*?)\)", arg_list[1])
+            
             if match is not None:
-                command = [argl[1][:match.span()[0]], match.group()[1:-1]]
-                if command[0] in argdict.keys():
-                    call = "{} {}".format(argl[0], command[1])
-                    return argdict[command[0]](call)
+                command = [arg_list[1][:match.span()[0]], match.group()[1:-1]]
+                
+                if command[0] in command_dict.keys():
+                    call = "{} {}".format(arg_list[0], command[1])
+                    return command_dict[command[0]](call)
+        
         print("*** Unknown syntax: {}".format(arg))
         return False
 
     def do_quit(self, arg):
-        """Quit command to exit the program."""
+        """
+        Quit command to exit the program.
+        """
         return True
 
     def do_EOF(self, arg):
-        """EOF signal to exit the program."""
+        """
+        EOF signal to exit the program.
+        """
         print("")
         return True
 
     def do_create(self, arg):
-        """Usage: create <class>
-        Create a new class instance and print its id.
         """
-        argl = parse(arg)
-        if len(argl) == 0:
+        Create a new instance of a class and print its id.
+        Usage: create <class>
+        """
+        arg_list = parse_arguments(arg)
+        
+        if len(arg_list) == 0:
             print("** class name missing **")
-        elif argl[0] not in HBNBCommand.__classes:
+        elif arg_list[0] not in HBNBCommand.valid_classes:
             print("** class doesn't exist **")
         else:
-            print(eval(argl[0])().id)
+            print(eval(arg_list[0])().id)
             storage.save()
 
     def do_show(self, arg):
-        """Usage: show <class> <id> or <class>.show(<id>)
-        Display the string representation of a class instance of a given id.
         """
-        argl = parse(arg)
-        objdict = storage.all()
-        if len(argl) == 0:
-            print("** class name missing **")
-        elif argl[0] not in HBNBCommand.__classes:
-            print("**
+        Display the string representation of a class instance with a given id.
+        Usage: show <
