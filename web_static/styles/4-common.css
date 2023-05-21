@@ -1,0 +1,23 @@
+/* Common Styles */
+
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	color: #484848;
+	font-family: Circular, "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+}
+
+
+.container {
+	width: 100%;
+	max-width: 1000px;
+	margin-block: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-self: center;
+	justify-self: center;
+	margin-inline: auto;
+}
