@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-"""
-Hbnb Console
-==================
-This module is a Command Line Interpretor for an AirBnb Clone
-
-Example Usage:
-----------------
-
-
-Class:
------
-
-"""
 
 import cmd
 from models.base_model import BaseModel
