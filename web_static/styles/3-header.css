@@ -11,3 +11,7 @@ header {
 	align-items: center;
 	margin-left: 20px;
 }
+
+header::before {
+	content: url(../images/logo.png);
+}
