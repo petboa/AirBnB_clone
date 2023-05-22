@@ -1,1 +1,1 @@
-# 0x01. AirBnB clone - Web static
+# Solution to tasks on AirBnB CLone Webstatic
