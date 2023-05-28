@@ -1,5 +1,7 @@
+/* This file is used to style the header of the page */
+
 header {
-    background-color: #FF0000;
     height: 70px;
+    background-color: #FF0000;
     width: 100%;
 }
