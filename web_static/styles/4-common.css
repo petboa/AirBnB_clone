@@ -1,22 +1,20 @@
-* {
-    margin: 0;
-    padding: 0;
-}
+/*
+ * === Global style ===
+ */
 
+/* Body style */
 body {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    min-height: 100vh;
     color: #484848;
-    font-size: 14px;
-    font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
-.container {
-    
+    font: 14px Circular, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  
+  /* Container style */
+  .container {
     margin: 30px auto;
     max-width: 1000px;
-    align-self: center;
-    width: 100%;
-}
+  }
+  
+  /* Strong style */
+  strong {
+    font-weight: bold;
+  }
